@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
         busMarker=new ArrayList<>();
        // busMarker=kkk();
         s = new ArrayList<>();
+        s= (ArrayList<String>) getIntent().getSerializableExtra("numbers");
         s.add("#");
         s.add("100");
         s.add("102");
@@ -128,9 +129,23 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
         spinner.setPrompt("Title");
         // выделяем элемент
         spinner.setSelection(0);
-        roadManager = new OSRMRoadManager(this);
-       roadManager = new MapQuestRoadManager("CZakBOlbjVe4KXdNZ3Uy1k71UbRjws2H");
-        roadManager.addRequestOption("routeType=multimodal");
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+
+        map = (MapView) findViewById(R.id.map);
+        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.getOverlays().add(0, mapEventsOverlay);
+        map.setBuiltInZoomControls(true);
+        map.setMultiTouchControls(true);
+        map.setMaxZoomLevel(16);
+        final IMapController mapController = map.getController();
+        mapController.setZoom(13);
+
+        mapController.setCenter(new GeoPoint(42.876,74.602));
+
+        roadManager = new MapQuestRoadManager("15ac3mcOSwue5qIs3UxxAyW3DJSUKckP");
+        roadManager.addRequestOption("routeType=bicycle");
         // устанавливаем обработчик нажатия
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -138,12 +153,14 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
                                        final int position, long id) {
                 // показываем позиция нажатого элемента
                 Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
-                final ArrayList<GeoPoint> waypoints = routes.getReout(s.get(position));
-
+              //  final ArrayList<GeoPoint> waypoints = routes.getReout(s.get(position));
+                final ArrayList<GeoPoint> waypoints=new ArrayList<GeoPoint>();
                Cursor cursor= dataHelper.getDataRouteByNumber(s.get(position));
+                dataHelper.readDataRoute(s.get(position));
                 if (cursor.getCount()!=0){
                     while (cursor.moveToNext()){
                         GeoPoint geoPoint=new GeoPoint(cursor.getDouble(cursor.getColumnIndex(DataHelper.ROUTE_LAT_COLUMN)),cursor.getDouble(cursor.getColumnIndex(DataHelper.ROUTE_LONG_COLUMN)));
+                       Log.e("TAGGG_SUKA"+s.get(position),cursor.getDouble(cursor.getColumnIndex(DataHelper.ROUTE_LAT_COLUMN))+"   "+cursor.getDouble(cursor.getColumnIndex(DataHelper.ROUTE_LONG_COLUMN)));
                         waypoints.add(geoPoint);
                     }
                 }
@@ -160,8 +177,11 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
                                 map.getOverlays().remove(roadOverlay);
 
                             roadOverlay = RoadManager.buildRoadOverlay(road);
-                            roadOverlay.setColor(Color.GREEN);
                             map.getOverlays().add(roadOverlay);
+
+
+
+
 
                         }
                     });
@@ -347,20 +367,6 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
             }
         });
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
-
-        map = (MapView) findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.MAPNIK);
-        map.getOverlays().add(0, mapEventsOverlay);
-        map.setBuiltInZoomControls(true);
-        map.setMultiTouchControls(true);
-        map.setMaxZoomLevel(16);
-        final IMapController mapController = map.getController();
-        mapController.setZoom(13);
-
-        mapController.setCenter(new GeoPoint(42.876,74.602));
 
 
         h = new Handler() {
@@ -395,11 +401,11 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+      /*  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 1000 * 10, 10, locationListener);
         locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER, 1000 * 10, 10,
-                locationListener);
+                locationListener);*/
 
 
     }

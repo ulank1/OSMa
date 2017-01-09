@@ -17,9 +17,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity {
-
+    ArrayList<String> arrayList;
     DataHelper dataHelper;
     ProgressBar progressBar;
     @Override
@@ -28,6 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         dataHelper=new DataHelper(this);
         progressBar=(ProgressBar) findViewById(R.id.progress);
+        arrayList=new ArrayList<>();
 
 
     }
@@ -43,7 +45,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void onClick1(View view) {
-        startActivity(new Intent(SplashActivity.this,MainActivity.class));
+        Intent intent=new Intent(SplashActivity.this,MainActivity.class);
+        intent.putExtra("numbers",arrayList);
+        startActivity(intent);
     }
 
     public class ParseTask extends AsyncTask<Void, Void, String> {
@@ -57,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
 
             try {
 
-                URL url = new URL("https://routes-of-bishkek.herokuapp.com/api/v1/route/?format=json&offset=149");
+                URL url = new URL("https://routes-of-bishkek.herokuapp.com/api/v1/route/?format=json");
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -99,13 +103,27 @@ public class SplashActivity extends AppCompatActivity {
                     JSONObject menu = menus.getJSONObject(i);
                     Log.e("TAG",menu.getDouble("lat")+"    "+menu.getDouble("longt")+"    "+menu.getString("price")+"    "+menu.getString("loc"));
 
-                    dataHelper.addRoute(menu.getDouble("lat"),menu.getDouble("longt"),menu.getString("price"),menu.getString("loc"));
+                    dataHelper.addRoute(menu.getDouble("lat"),menu.getDouble("longt"),menu.getString("price"),menu.getString("loc"),menu.getInt("id"));
 
+                    try {
+                        boolean bool=true;
+                        for (int j=0;j<arrayList.size();j++){
+                            if (arrayList.get(j).equals(menu.getString("price"))){
+                                bool=false;
+                                break;
+                            }
+                        }
+                        if (bool==true) {
+                            arrayList.add(menu.getString("price"));
+                        }
+                    }catch (Exception e){
+
+                    }
 
 
                 }
 
-
+                Log.e("TAGGG",arrayList.get(0));
 
 
             } catch (JSONException e) {

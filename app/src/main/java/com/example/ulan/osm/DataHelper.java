@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 /**
  * Created by Админ on 06.01.2017.
@@ -18,6 +19,7 @@ public class DataHelper extends SQLiteOpenHelper {
     public static final String TABLE_ROUTE ="Route";
     public static final String ROUTE_LOC_COLUMN="loc_route";
     public static final String ROUTE_LAT_COLUMN="lat_route";
+    public static final String ROUTE_JSON_ID_COLUMN="id_route";
     public static final String ROUTE_LONG_COLUMN="long_route";
     public static final String ROUTE_NUMBER_COLUMN="number_route";
 
@@ -38,9 +40,9 @@ public class DataHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_ROUTE + "(" +
-                BaseColumns._ID + " integer primary key autoincrement," +
                 ROUTE_LAT_COLUMN + " real," +
                 ROUTE_LOC_COLUMN + " text," +
+                ROUTE_JSON_ID_COLUMN + " integer," +
                 ROUTE_NUMBER_COLUMN + " text," +
                 ROUTE_LONG_COLUMN + " real);");
         db.execSQL("create table " + TABLE_DATE + "(" +
@@ -53,10 +55,11 @@ public class DataHelper extends SQLiteOpenHelper {
 
     }
 
-    public  void addRoute(double lat, double longt, String name, String loc){
+    public  void addRoute(double lat, double longt, String name, String loc, int id){
         ContentValues values = new ContentValues();
 
         values.put(ROUTE_LAT_COLUMN, lat);
+        values.put(ROUTE_JSON_ID_COLUMN, id);
         values.put(ROUTE_LOC_COLUMN, loc);
         values.put(ROUTE_LONG_COLUMN, longt);
         values.put(ROUTE_NUMBER_COLUMN, name);
@@ -74,12 +77,23 @@ public class DataHelper extends SQLiteOpenHelper {
     public Cursor getDataRouteByNumber(String number) {
         return getReadableDatabase().query(TABLE_ROUTE,
                 null,  ROUTE_NUMBER_COLUMN+ " = ? ", new String[]{String.valueOf(number)},
-                null, null, null);
+                null, null, ROUTE_JSON_ID_COLUMN+" ASC");
     }
     public void deleteRoute() {
         getWritableDatabase().delete(TABLE_ROUTE, null, null);
     }
 
+
+    public void readDataRoute(String number){
+        Cursor cursor=getDataRouteByNumber(number);
+        if (cursor.getCount()!=0){
+            while (cursor.moveToNext()){
+                Log.e("TAG_GAND",cursor.getString(cursor.getColumnIndex(ROUTE_LAT_COLUMN))+" "+cursor.getString(cursor.getColumnIndex(ROUTE_LONG_COLUMN)));
+            }
+        }
+        Log.e("TAG_GAND","GAND");
+
+    }
 
 
 }
