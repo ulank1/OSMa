@@ -23,6 +23,13 @@ public class DataHelper extends SQLiteOpenHelper {
     public static final String ROUTE_LONG_COLUMN="long_route";
     public static final String ROUTE_NUMBER_COLUMN="number_route";
 
+    public static final String TABLE_SEARCH ="Search";
+    public static final String SEARCH_LOC_COLUMN="loc_search";
+    public static final String SEARCH_LAT_COLUMN="lat_search";
+    public static final String SEARCH_JSON_ID_COLUMN="id_search";
+    public static final String SEARCH_LONG_COLUMN="long_search";
+    public static final String SEARCH_NUMBER_COLUMN="number_search";
+
 
     public static final String TABLE_DATE ="Date";
     public static final String DATE_D_COLUMN="date_d";
@@ -45,6 +52,14 @@ public class DataHelper extends SQLiteOpenHelper {
                 ROUTE_JSON_ID_COLUMN + " integer," +
                 ROUTE_NUMBER_COLUMN + " text," +
                 ROUTE_LONG_COLUMN + " real);");
+
+        db.execSQL("create table " + TABLE_SEARCH + "(" +
+                SEARCH_LAT_COLUMN + " real," +
+                SEARCH_LOC_COLUMN + " text," +
+                SEARCH_JSON_ID_COLUMN + " integer," +
+                SEARCH_NUMBER_COLUMN + " text," +
+                SEARCH_LONG_COLUMN + " real);");
+
         db.execSQL("create table " + TABLE_DATE + "(" +
 
                 DATE_D_COLUMN + " text);");
@@ -89,6 +104,47 @@ public class DataHelper extends SQLiteOpenHelper {
         if (cursor.getCount()!=0){
             while (cursor.moveToNext()){
                 Log.e("TAG_GAND",cursor.getString(cursor.getColumnIndex(ROUTE_LAT_COLUMN))+" "+cursor.getString(cursor.getColumnIndex(ROUTE_LONG_COLUMN)));
+            }
+        }
+        Log.e("TAG_GAND","GAND");
+
+    }
+
+
+    public  void addSearch(double lat, double longt, String name, String loc, int id){
+        ContentValues values = new ContentValues();
+
+        values.put(SEARCH_LAT_COLUMN, lat);
+        values.put(SEARCH_JSON_ID_COLUMN, id);
+        values.put(SEARCH_LOC_COLUMN, loc);
+        values.put(SEARCH_LONG_COLUMN, longt);
+        values.put(SEARCH_NUMBER_COLUMN, name);
+
+
+        getWritableDatabase().insert(TABLE_SEARCH, null, values);
+    }
+
+    public Cursor getDataSearch() {
+        return getReadableDatabase().query(TABLE_SEARCH,
+                null, null, null,
+                null, null, null);
+    }
+
+    public Cursor getDataSearchByNumber(String number) {
+        return getReadableDatabase().query(TABLE_SEARCH,
+                null,  SEARCH_NUMBER_COLUMN+ " = ? ", new String[]{String.valueOf(number)},
+                null, null, SEARCH_JSON_ID_COLUMN+" ASC");
+    }
+    public void deleteSearch() {
+        getWritableDatabase().delete(TABLE_SEARCH, null, null);
+    }
+
+
+    public void readDataSearch(String number){
+        Cursor cursor=getDataSearchByNumber(number);
+        if (cursor.getCount()!=0){
+            while (cursor.moveToNext()){
+                Log.e("TAG_GANDOOOOOOD",cursor.getString(cursor.getColumnIndex(SEARCH_LAT_COLUMN))+" "+cursor.getString(cursor.getColumnIndex(SEARCH_LONG_COLUMN)));
             }
         }
         Log.e("TAG_GAND","GAND");

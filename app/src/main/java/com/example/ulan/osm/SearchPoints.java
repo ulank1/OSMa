@@ -1,5 +1,8 @@
 package com.example.ulan.osm;
 
+import android.content.Context;
+import android.database.Cursor;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
@@ -10,9 +13,10 @@ import java.util.ArrayList;
 
 public class SearchPoints {
     ArrayList<NearRoutes> nearRoutes=new ArrayList<>();
-    public ArrayList<NearRoutes> getNearRoutes(){
+    DataHelper dataHelper;
+    public ArrayList<NearRoutes> getNearRoutes(Context context){
         ArrayList<GeoPoint> waypoints=new ArrayList<>();
-
+        dataHelper=new DataHelper(context);
 
 
         waypoints.add(new GeoPoint(42.82556130410877,74.54463958740234));
@@ -766,6 +770,25 @@ public class SearchPoints {
         nearRoutes1.setNumber("107");
         nearRoutes1.setWaypoints(waypoints);
         nearRoutes.add(nearRoutes1);
+
+        for (int i=108;i<176;i++){
+            Cursor cursor = dataHelper.getDataSearchByNumber(i+"");
+            if (cursor.getCount()!=0){
+                waypoints = new ArrayList<>();
+                while (cursor.moveToNext()) {
+
+                    waypoints.add(new GeoPoint(cursor.getDouble(cursor.getColumnIndex(DataHelper.SEARCH_LAT_COLUMN)),cursor.getDouble(cursor.getColumnIndex(DataHelper.SEARCH_LONG_COLUMN))));
+                }
+
+                nearRoutes1=new NearRoutes();
+                nearRoutes1.setNumber(i+"");
+                nearRoutes1.setWaypoints(waypoints);
+                nearRoutes.add(nearRoutes1);
+            }
+
+
+        }
+
 
 
         return nearRoutes;

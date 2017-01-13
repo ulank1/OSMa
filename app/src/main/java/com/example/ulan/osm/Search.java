@@ -22,6 +22,8 @@ public class Search {
             NearRoutes nearRoutes1 = nearRoutes.get(i);
             ArrayList<GeoPoint> geoPoints = nearRoutes1.getWaypoints();
 
+            Log.e("TAG_NUMBER_SEARCH",nearRoutes1.getNumber());
+            Log.e("TAG_COUNT_SEARCH",nearRoutes1.getWaypoints().size()+" ");
 
             for (int j = 0; j < geoPoints.size(); j++) {
                 double d = Math.abs(geoPoint.getLatitude() - geoPoints.get(j).getLatitude());
@@ -45,7 +47,7 @@ public class Search {
 
             if (bool && bool2){ searchNea.add(nearRoutes1.getNumber());
             countPoints.add(Math.abs(min-max));}
-            Log.e("TAGGGA", bool + "");
+            Log.e("TAGGGA", bool + ""+bool2);
         }
         String searchNeaStr[]=new String[searchNea.size()];
        for (int i=0;i<searchNea.size();i++){

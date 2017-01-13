@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
@@ -35,6 +36,7 @@ import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.events.MapEventsReceiver;
+import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -104,18 +106,118 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
        // busMarker=kkk();
         s = new ArrayList<>();
         s= (ArrayList<String>) getIntent().getSerializableExtra("numbers");
-        s.add("#");
-        s.add("100");
-        s.add("102");
-        s.add("103");
-        s.add("104");
-        s.add("105");
-        s.add("106");
-        s.add("107");
+        s.add("#");        s.add("100");        s.add("102");        s.add("103");s.add("104");s.add("105");s.add("106");s.add("107");s.add("108");s.add("110");s.add("111");s.add("113");s.add("114");s.add("117");s.add("118");s.add("121");
+        s.add("122");
+        s.add("123");
+        s.add("127");
+        s.add("128");
+        s.add("129");
+        s.add("130");
+        s.add("131");
+        s.add("132");
+        s.add("133");
+        s.add("134");
+        s.add("135");
+        s.add("136");
+        s.add("137");
+        s.add("138");
         s.add("139");
+        s.add("143");
+        s.add("145");
+        s.add("146");
+        s.add("147");
+        s.add("148");
+        s.add("150");
+        s.add("152");
+        s.add("154");
+        s.add("155");
+        s.add("159");
+        s.add("161");
+        s.add("162");
+        s.add("164");
+        s.add("166");
+        s.add("167");
+        s.add("169");
+        s.add("170");
+        s.add("171");
+        s.add("172");
+        s.add("173");
+        s.add("174");
+        s.add("175");
+        s.add("176");
+        s.add("177");
+        s.add("179");
+        s.add("180");
+        s.add("184");
+        s.add("185");
+        s.add("188");
+        s.add("191");
+        s.add("192");
+        s.add("195");
+        s.add("199");
+        s.add("200");
+        s.add("202");
+        s.add("203");
+        s.add("204");
+        s.add("206");
+        s.add("210");
+        s.add("211");
+        s.add("212");
+        s.add("213");
+        s.add("214");
+        s.add("215");
+        s.add("216");
+        s.add("218");
+        s.add("219");
+        s.add("220");
+        s.add("222");
+        s.add("223");
+        s.add("224");
+        s.add("225");
+        s.add("226");
+        s.add("227");
+        s.add("228");
+        s.add("230");
+        s.add("233");
+        s.add("234");
+        s.add("238");
+        s.add("240");
+        s.add("243");
+        s.add("251");
+        s.add("252");
+        s.add("254");
+        s.add("257");
         s.add("258");
+        s.add("260");
+        s.add("262");
+        s.add("264");
+        s.add("265");
+        s.add("266");
+        s.add("269");
+        s.add("270");
+        s.add("281");
+        s.add("285");
+        s.add("286");
+        s.add("290");
+        s.add("295");
+        s.add("305");
+        s.add("307");
+        s.add("318");
+        s.add("344");
+        s.add("355");
+        s.add("362");
+        s.add("366");
+        s.add("373");
+        s.add("378");
+        s.add("380");
+
+
+
+        s.add("258");
+
+
         SearchPoints searchpoints = new SearchPoints();
-        nearRoutes = searchpoints.getNearRoutes();
+        nearRoutes = searchpoints.getNearRoutes(this);
 
 
         //Spinner------------------------------------------------------------------------------------
@@ -131,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
         spinner.setSelection(0);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+        OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
         map = (MapView) findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
@@ -153,14 +255,13 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
                                        final int position, long id) {
                 // показываем позиция нажатого элемента
                 Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
-              //  final ArrayList<GeoPoint> waypoints = routes.getReout(s.get(position));
+            //   final ArrayList<GeoPoint> waypoints = routes.getReout(s.get(position));
                 final ArrayList<GeoPoint> waypoints=new ArrayList<GeoPoint>();
+
                Cursor cursor= dataHelper.getDataRouteByNumber(s.get(position));
-                dataHelper.readDataRoute(s.get(position));
                 if (cursor.getCount()!=0){
                     while (cursor.moveToNext()){
                         GeoPoint geoPoint=new GeoPoint(cursor.getDouble(cursor.getColumnIndex(DataHelper.ROUTE_LAT_COLUMN)),cursor.getDouble(cursor.getColumnIndex(DataHelper.ROUTE_LONG_COLUMN)));
-                       Log.e("TAGGG_SUKA"+s.get(position),cursor.getDouble(cursor.getColumnIndex(DataHelper.ROUTE_LAT_COLUMN))+"   "+cursor.getDouble(cursor.getColumnIndex(DataHelper.ROUTE_LONG_COLUMN)));
                         waypoints.add(geoPoint);
                     }
                 }
@@ -180,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
                             map.getOverlays().add(roadOverlay);
 
 
-
+                        h.sendEmptyMessage(1);
 
 
                         }
@@ -373,7 +474,7 @@ public class MainActivity extends AppCompatActivity implements MapEventsReceiver
             @Override
 
 
-            public void handleMessage(android.os.Message msg) {
+            public void handleMessage(Message msg) {
                 // обновляем TextView
                 if (msg.what == 1)
                     map.invalidate();

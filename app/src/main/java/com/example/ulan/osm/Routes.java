@@ -188,7 +188,7 @@ public class Routes {
 
 
         }
-        else if (number.equals("108")){
+      /*  else if (number.equals("108")){
             waypoints.add(new GeoPoint(42.864594030827334,74.46183443069458));
             waypoints.add(new GeoPoint(42.87357388778022,74.46069717407227));
             waypoints.add(new GeoPoint(42.87709627698713,74.57124710083008));
@@ -296,7 +296,7 @@ public class Routes {
             waypoints.add(new GeoPoint(42.89926384303349,74.64304447174072));
             waypoints.add(new GeoPoint(42.89376199903989,74.64690685272217));
 
-        }
+        }*/
 
         return  waypoints;
     }
